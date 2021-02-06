@@ -1,5 +1,4 @@
 import $ from "jquery";
-import { useState } from "react";
 
 const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
   if (!grab) {
@@ -20,31 +19,22 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
     spacing_y = 80;
   }
   $(document).ready(function () {
-    const canvas_div = canvas;
-    const [blocks, setBlocks] = useState([]);
-    const [blockstemp, setBlockStemp] = useState([]);
-    const [active, setActive] = useState(false);
-    const [paddingx, setPaddingx] = useState(spacing_x);
-    const [paddingy, setPaddingy] = useState(spacing_y);
-    const [offsetleft, setOffsetLeft] = useState(0);
-    const [offsetleftold, setOffsetLeftOld] = useState(0);
-    const [rearrange, setRearrange] = useState(false);
-    const [lastevent, setLastEvent] = useState(false);
-    // var blocks = [];
-    // var blockstemp = [];
-    // var active = false;
-    // var paddingx = spacing_x;
-    // var paddingy = spacing_y;
-    // var offsetleft = 0;
-    // var offsetleftold = 0;
-    // var rearrange = false;
-    // var lastevent = false;
+    var blocks = [];
+    var blockstemp = [];
+    var canvas_div = canvas;
+    var active = false;
+    var paddingx = spacing_x;
+    var paddingy = spacing_y;
+    var offsetleft = 0;
+    var offsetleftold = 0;
+    var rearrange = false;
+    var lastevent = false;
     var drag, dragx, dragy, original;
     var mouse_x, mouse_y;
     canvas_div.append("<div class='indicator invisible'></div>");
     flowy.import = function (output) {
       canvas_div.html(JSON.parse(output.html));
-      setBlocks(output.blockarr);
+      blocks = output.blockarr;
     };
     flowy.output = function () {
       var html_ser = JSON.stringify(canvas_div.html());
@@ -72,7 +62,7 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
       }
     };
     flowy.deleteBlocks = function () {
-      setBlocks([]);
+      blocks = [];
       canvas_div.html("<div class='indicator invisible'></div>");
     };
     $(document).on("mousedown touchstart", ".create-flowy", function (event) {
@@ -219,7 +209,7 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
             drag.offset().left + drag.innerWidth() / 2;
           blockstemp.filter((a) => a.id == 0)[0].y =
             drag.offset().top + drag.innerHeight() / 2;
-          setBlocks($.merge(blocks, blockstemp));
+          blocks = $.merge(blocks, blockstemp);
           blockstemp = [];
         } else if (
           active &&
@@ -472,7 +462,7 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
               canvas_div.scrollTop();
           }
         }
-        setBlocks($.merge(blocks, blockstemp));
+        blocks = $.merge(blocks, blockstemp);
         blockstemp = [];
       } else {
         blocks.push({
@@ -645,11 +635,9 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
                 var blockid = parseInt($(this).children(".blockid").val());
                 drag = $(this);
                 blockstemp.push(blocks.filter((a) => a.id == blockid)[0]);
-                setBlocks(
-                  $.grep(blocks, function (e) {
-                    return e.id != blockid;
-                  })
-                );
+                blocks = $.grep(blocks, function (e) {
+                  return e.id != blockid;
+                });
                 $(".arrowid[value=" + blockid + "]")
                   .parent()
                   .remove();
@@ -718,19 +706,15 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
                   var blocknumber = blocks.filter((a) => a.parent == blockid)[
                     i
                   ];
-                  setBlocks(
-                    $.grep(blocks, function (e) {
-                      return e.id != blocknumber;
-                    })
-                  );
+                  blocks = $.grep(blocks, function (e) {
+                    return e.id != blocknumber;
+                  });
                 }
                 for (var i = 0; i < allids.length; i++) {
                   var blocknumber = allids[i];
-                  setBlocks(
-                    $.grep(blocks, function (e) {
-                      return e.id != blocknumber;
-                    })
-                  );
+                  blocks = $.grep(blocks, function (e) {
+                    return e.id != blocknumber;
+                  });
                 }
                 if (blocks.length > 1) {
                   rearrangeMe();
