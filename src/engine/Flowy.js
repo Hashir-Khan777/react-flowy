@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
+var flowy = function (canvas, grab, release, snapping, spacing_x, spacing_y) {
   if (!grab) {
     grab = function () {};
   }
