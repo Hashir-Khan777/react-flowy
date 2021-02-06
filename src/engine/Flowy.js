@@ -44,7 +44,7 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
     canvas_div.append("<div class='indicator invisible'></div>");
     flowy.import = function (output) {
       canvas_div.html(JSON.parse(output.html));
-      blocks = output.blockarr;
+      setBlocks(output.blockarr);
     };
     flowy.output = function () {
       var html_ser = JSON.stringify(canvas_div.html());
@@ -72,7 +72,7 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
       }
     };
     flowy.deleteBlocks = function () {
-      blocks = [];
+      setBlocks([]);
       canvas_div.html("<div class='indicator invisible'></div>");
     };
     $(document).on("mousedown touchstart", ".create-flowy", function (event) {
@@ -219,7 +219,7 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
             drag.offset().left + drag.innerWidth() / 2;
           blockstemp.filter((a) => a.id == 0)[0].y =
             drag.offset().top + drag.innerHeight() / 2;
-          blocks = $.merge(blocks, blockstemp);
+          setBlocks($.merge(blocks, blockstemp));
           blockstemp = [];
         } else if (
           active &&
@@ -472,7 +472,7 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
               canvas_div.scrollTop();
           }
         }
-        blocks = $.merge(blocks, blockstemp);
+        setBlocks($.merge(blocks, blockstemp));
         blockstemp = [];
       } else {
         blocks.push({
@@ -645,9 +645,11 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
                 var blockid = parseInt($(this).children(".blockid").val());
                 drag = $(this);
                 blockstemp.push(blocks.filter((a) => a.id == blockid)[0]);
-                blocks = $.grep(blocks, function (e) {
-                  return e.id != blockid;
-                });
+                setBlocks(
+                  $.grep(blocks, function (e) {
+                    return e.id != blockid;
+                  })
+                );
                 $(".arrowid[value=" + blockid + "]")
                   .parent()
                   .remove();
@@ -716,15 +718,19 @@ const flowy = (canvas, grab, release, snapping, spacing_x, spacing_y) => {
                   var blocknumber = blocks.filter((a) => a.parent == blockid)[
                     i
                   ];
-                  blocks = $.grep(blocks, function (e) {
-                    return e.id != blocknumber;
-                  });
+                  setBlocks(
+                    $.grep(blocks, function (e) {
+                      return e.id != blocknumber;
+                    })
+                  );
                 }
                 for (var i = 0; i < allids.length; i++) {
                   var blocknumber = allids[i];
-                  blocks = $.grep(blocks, function (e) {
-                    return e.id != blocknumber;
-                  });
+                  setBlocks(
+                    $.grep(blocks, function (e) {
+                      return e.id != blocknumber;
+                    })
+                  );
                 }
                 if (blocks.length > 1) {
                   rearrangeMe();
