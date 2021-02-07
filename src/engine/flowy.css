@@ -33,9 +33,11 @@
 }
 .arrowblock {
   position: absolute;
-  width: 110%;
+  width: 100%;
+  overflow: visible;
   pointer-events: none;
 }
 .arrowblock svg {
-  width: 110%;
+  width: -webkit-fill-available;
+  overflow: visible;
 }
